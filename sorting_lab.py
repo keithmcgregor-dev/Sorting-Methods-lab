@@ -31,6 +31,7 @@ HIGH_FREQUENCY = 1200
 # ------------------------------------------------------------
 
 def value_to_frequency(value):
+
     """
     Convert a list value into a frequency.
 
@@ -67,22 +68,14 @@ def play_value_sound(value):
 # ------------------------------------------------------------
 
 def generate_list(size=DEFAULT_LIST_SIZE):
-    """
-    Return a list containing 'size' random integers.
 
-    TODO:
-        Generate random integers between MIN_VALUE and MAX_VALUE.
-    """
-    pass
+    
 
+    
+    return [random.randint(MIN_VALUE,MAX_VALUE) for i in range(size)]
 
 def draw_list(values, title="Sorting"):
-    """
-    Draw the current list as a bar graph.
-
-    You do not need to modify this function unless you want to
-    experiment with the visualization.
-    """
+    
     plt.clf()
 
     plt.bar(range(len(values)), values)
@@ -109,8 +102,19 @@ def selection_sort(values):
         4. Call draw_list() after an important change.
         5. Call play_value_sound() for a meaningful value.
     """
-    pass
+    n = len(values)
+    for current in range(n):
+        min = current
+        for i in range(current + 1, n):
+            play_value_sound
+            if values[min] > values[i]:
+                min = i
+        values[current], values[min] = values[min], values[current]
+        draw_list
+    return values
 
+
+            
 
 def bubble_sort(values):
     """
@@ -123,8 +127,14 @@ def bubble_sort(values):
         Call draw_list() after each swap.
         Also call play_value_sound() for one of the swapped values.
     """
-    pass
-
+    n = len(values)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if values[j] > values[ j + 1]:
+                values[j], values[j + 1] = values[j + 1], values[j]
+                play_value_sound(values[j + 1])
+                draw_list()
+    return values
 
 def insertion_sort(values):
     """
@@ -137,7 +147,17 @@ def insertion_sort(values):
         Call draw_list() as values move.
         Play the value currently being inserted.
     """
-    pass
+    n = len(values)
+    for i in range(1, n):
+        key = values[i]
+        j = i - 1
+        play_value_sound(key)
+        while j >= 0 and values[j] > key:
+            values[j + 1] = values[j]
+            j -= 1
+            draw_list()
+        values[j + 1] = key
+    return values
 
 
 def merge(left, right):
@@ -148,7 +168,19 @@ def merge(left, right):
         Return one sorted list containing all values
         from left and right.
     """
-    pass
+    result = []
+    i = 0
+    j = 0
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
 
 
 def merge_sort(values):
@@ -167,7 +199,41 @@ def merge_sort(values):
 
         Play each value as it is written back into the main list.
     """
-    pass
+    sorted_list = split(values)
+    
+   
+    for i in range(len(values)):
+        values[i] = sorted_list[i]
+        play_value_sound(values[i])
+        draw_list()
+        
+    return values
+def split(mylist):
+    n = len(mylist)
+    if n <= 1:
+        return mylist
+    
+    half = n // 2
+    left = split(mylist[0:half])
+    right = split(mylist[half:])
+
+    return merge(left, right)
+def merge(left, right):
+    newlist = []
+    i = 0
+    j = 0
+    
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            newlist.append(left[i])
+            i += 1
+        else:
+            newlist.append(right[j])
+            j += 1
+            
+    newlist += left[i:] + right[j:]
+    return newlist
+    
 
 
 def quick_sort(values):
@@ -196,8 +262,8 @@ def print_selection_info():
         1. A short explanation of Selection Sort in your own words.
         2. Pseudocode for Selection Sort.
     """
-    pass
-
+    print("Selection sort takes 2 different parts of your list, a sorted part and an unsorted part. It goes through each unsorted values and finds the lowest, then moves that to the front of the sorted line. It does this and then increases the size of the sorted group.It continues until there is no values left that are unsorted.")
+    print("Pseudocode = Go through the entire list and find the smallest item, swap it to the first spot, repeat this until all values are sorted mving one step to the right each tiem until the entire list is ordered")
 
 def print_bubble_info():
     """
@@ -206,8 +272,8 @@ def print_bubble_info():
         1. A short explanation of Bubble Sort in your own words.
         2. Pseudocode for Bubble Sort.
     """
-    pass
-
+    print("it goes through the lsit and compares neighbors and swaps them if the lest is greater than the right, eventually the largest values are swapped to the top and only stops when all neighbors are greater then their left neighbor.")
+    print("walking down the list comapre the current index to its right neighbor, if its greater swap them, repeat this until a full pass of the list happen where 0 swaps are needed.")
 
 def print_insertion_info():
     """
@@ -216,8 +282,8 @@ def print_insertion_info():
         1. A short explanation of Insertion Sort in your own words.
         2. Pseudocode for Insertion Sort.
     """
-    pass
-
+    print("insertion sort is where you go through the list and one at a time you just take an unsorted item and put it in its correct order amoung the already sorted part of the list")
+    print("go through the list and treat everything behind the current index as sorted and take that current item and more it into its proper place within the sorted items, then move on to the next and do the same")
 
 def print_merge_info():
     """
@@ -226,8 +292,8 @@ def print_merge_info():
         1. A short explanation of Merge Sort in your own words.
         2. Pseudocode for Merge Sort.
     """
-    pass
-
+    print("you split the list in half down to a single item smaller list which are already sorted and then you merge all of the small list into one bigger sorted list.")
+    print("cut the list over and over again in half until you are left with a single sorted piece, then take those smaller pieces and put them back in correct order until they ALL come together ad the total sorted list.")
 
 def print_quick_info():
     """
@@ -238,8 +304,8 @@ def print_quick_info():
         1. A short explanation of Quick Sort in your own words.
         2. Pseudocode for Quick Sort.
     """
-    pass
-
+    print("you take a pivot and put everything smaller to its left and everything larger to its right, then in one of those sublists find another pivot and do the same until the whole list is in order. ")
+    print("Choose one element and then sort everything smaller to its left, then go into that side of the list and pick another pivot and o the same, eventually you will go over to the right side of the orginal pivot and repeat until the whole list is in order.")
 
 def print_info_menu():
     print()
