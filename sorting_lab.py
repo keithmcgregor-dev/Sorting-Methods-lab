@@ -30,37 +30,31 @@ HIGH_FREQUENCY = 1200
 # Sound Functions
 # ------------------------------------------------------------
 
-def value_to_frequency(value):
-
-    """
-    Convert a list value into a frequency.
-
-    TODO:
-        Map values from MIN_VALUE through MAX_VALUE
-        into frequencies from LOW_FREQUENCY through HIGH_FREQUENCY.
-
-        Smaller values should produce lower pitches.
-        Larger values should produce higher pitches.
-    """
-    pass
-
+def value_to_frequency(value, min_value, max_value, low_frequency, high_frequency):
+    if max_value == min_value:
+        return low_frequency
+    clamped_value = max(min_value, min(value, max_value))
+    ratio = (clamped_value - min_value) / (max_value - min_value)
+    frequency = low_frequency + ratio * (high_frequency - low_frequency)
+    return frequency
 
 def play_value_sound(value):
     """
     Play a short sound whose pitch depends on value.
 
-    TODO:
-        1. Return immediately if SOUND_ENABLED is False.
-        2. Convert value to a frequency using value_to_frequency().
-        3. Play a short sound using an appropriate method for
-           the current operating system.
-        4. Make sure sound errors do not crash the program.
-
-    HINT:
-        platform.system() can help determine whether the
-        computer is running Windows, macOS, or Linux/Unix.
+    
     """
-    pass
+    if not SOUND_ENABLED:
+        return
+    try:
+        frequency = int(value_to_frequency(value, MIN_VALUE, MAX_VALUE, LOW_FREQUENCY, HIGH_FREQUENCY))  
+        if platform.system() == "Windows":
+            import winsound
+            winsound.Beep(frequency, 50)
+        else:
+           print("\a", end="", flush=True)  
+    except Exception as e:
+        print(f"DEBUG ERROR: {e}")
 
 
 # ------------------------------------------------------------
@@ -106,11 +100,11 @@ def selection_sort(values):
     for current in range(n):
         min = current
         for i in range(current + 1, n):
-            play_value_sound
+            play_value_sound(values[i])
             if values[min] > values[i]:
                 min = i
         values[current], values[min] = values[min], values[current]
-        draw_list
+        draw_list(values, "Selection Sort")
     return values
 
 
@@ -127,13 +121,14 @@ def bubble_sort(values):
         Call draw_list() after each swap.
         Also call play_value_sound() for one of the swapped values.
     """
+    
     n = len(values)
     for i in range(n):
         for j in range(0, n-i-1):
-            if values[j] > values[ j + 1]:
+            if values[j] > values[j + 1]:
                 values[j], values[j + 1] = values[j + 1], values[j]
                 play_value_sound(values[j + 1])
-                draw_list()
+                draw_list(values, "Bubble Sort")
     return values
 
 def insertion_sort(values):
@@ -155,7 +150,7 @@ def insertion_sort(values):
         while j >= 0 and values[j] > key:
             values[j + 1] = values[j]
             j -= 1
-            draw_list()
+            draw_list(values, "Insertion Sort")
         values[j + 1] = key
     return values
 
@@ -205,7 +200,7 @@ def merge_sort(values):
     for i in range(len(values)):
         values[i] = sorted_list[i]
         play_value_sound(values[i])
-        draw_list()
+        draw_list(values, "merge sort")
         
     return values
 def split(mylist):
@@ -218,21 +213,7 @@ def split(mylist):
     right = split(mylist[half:])
 
     return merge(left, right)
-def merge(left, right):
-    newlist = []
-    i = 0
-    j = 0
-    
-    while i < len(left) and j < len(right):
-        if left[i] < right[j]:
-            newlist.append(left[i])
-            i += 1
-        else:
-            newlist.append(right[j])
-            j += 1
-            
-    newlist += left[i:] + right[j:]
-    return newlist
+
     
 
 
@@ -263,8 +244,8 @@ def print_selection_info():
         2. Pseudocode for Selection Sort.
     """
     print("Selection sort takes 2 different parts of your list, a sorted part and an unsorted part. It goes through each unsorted values and finds the lowest, then moves that to the front of the sorted line. It does this and then increases the size of the sorted group.It continues until there is no values left that are unsorted.")
-    print("Pseudocode = Go through the entire list and find the smallest item, swap it to the first spot, repeat this until all values are sorted mving one step to the right each tiem until the entire list is ordered")
-
+    print("Scan through the entire unsorted portion of the list to locate the absolute smallest item, swap that minimum value into the current starting position of the unsorted segment  " \
+    "go one step to the right and repeat the process until every item has been placed in its correct sorted order")
 def print_bubble_info():
     """
     TODO:
@@ -273,8 +254,8 @@ def print_bubble_info():
         2. Pseudocode for Bubble Sort.
     """
     print("it goes through the lsit and compares neighbors and swaps them if the lest is greater than the right, eventually the largest values are swapped to the top and only stops when all neighbors are greater then their left neighbor.")
-    print("walking down the list comapre the current index to its right neighbor, if its greater swap them, repeat this until a full pass of the list happen where 0 swaps are needed.")
-
+    print("Walk down the list comparing each index with its right neighbor,If the left value is greater than the right value, swap them immediately " \
+    "Continue making passes through the list, stopping early and exiting the loop the moment a full pass finishes with zero swaps needed")
 def print_insertion_info():
     """
     TODO:
@@ -283,8 +264,8 @@ def print_insertion_info():
         2. Pseudocode for Insertion Sort.
     """
     print("insertion sort is where you go through the list and one at a time you just take an unsorted item and put it in its correct order amoung the already sorted part of the list")
-    print("go through the list and treat everything behind the current index as sorted and take that current item and more it into its proper place within the sorted items, then move on to the next and do the same")
-
+    print("go through the list, treating all elements behind the current index as a sorted sub list,Take the current item and shift larger elements to the right to make space " \
+    "Drop the current item into its exact  correct position within those sorted elements, then move to the next item.")
 def print_merge_info():
     """
     TODO:
@@ -293,8 +274,8 @@ def print_merge_info():
         2. Pseudocode for Merge Sort.
     """
     print("you split the list in half down to a single item smaller list which are already sorted and then you merge all of the small list into one bigger sorted list.")
-    print("cut the list over and over again in half until you are left with a single sorted piece, then take those smaller pieces and put them back in correct order until they ALL come together ad the total sorted list.")
-
+    print("cut the list in half over and over again until every sub list is made  of only a single item,Take those smaller pieces and merge them back together in the correct order " \
+    "Continue combining the sorted halves upward until they all come together into one sorted list")
 def print_quick_info():
     """
     OPTIONAL CHALLENGE
