@@ -53,8 +53,8 @@ def play_value_sound(value):
             winsound.Beep(frequency, 50)
         else:
            print("\a", end="", flush=True)  
-    except Exception as e:
-        print(f"DEBUG ERROR: {e}")
+    except  Exception:
+        pass
 
 
 # ------------------------------------------------------------
@@ -286,7 +286,8 @@ def print_quick_info():
         2. Pseudocode for Quick Sort.
     """
     print("you take a pivot and put everything smaller to its left and everything larger to its right, then in one of those sublists find another pivot and do the same until the whole list is in order. ")
-    print("Choose one element and then sort everything smaller to its left, then go into that side of the list and pick another pivot and o the same, eventually you will go over to the right side of the orginal pivot and repeat until the whole list is in order.")
+    print("Choose one element and then sort everything smaller to its left,"\
+    " then go into that side of the list and pick another pivot and o the same, eventually you will go over to the right side of the orginal pivot and repeat until the whole list is in order.")
 
 def print_info_menu():
     print()
